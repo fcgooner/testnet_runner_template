@@ -1,6 +1,6 @@
 from loguru import logger
 
-from data.variables import ALL_TASKS, BLUE, GREEN, RED, RESET
+from data.variables import ALL_TASKS, BLUE, RESET
 
 
 class Profile:
@@ -13,7 +13,7 @@ class Profile:
         self.task_results = {}
 
     def __str__(self) -> str:
-        return f"Профіль {self.profile_number} ({self.profile_id}):{RESET}\n{self.task_results}\n"
+        return f"{BLUE}Профіль {self.profile_number} ({self.profile_id}):{RESET}\n{self.task_results}\n"
 
     def set_task_result(self, key, value):
         self.task_results[key] = value
