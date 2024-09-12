@@ -97,6 +97,7 @@ if __name__ == "__main__":
     logger.remove()
     logger.level("DEBUG", color=DARK_GRAY)
     logger.level("PRINTOUT_BLUE", no=25, color="<blue>")
+    logger.level("PRINTOUT_GREEN", no=25, color="<green>")
     logger.level("PRINTOUT_RED", no=25, color="<red>")
     logger.level("PRINTOUT_YELLOW", no=25, color="<yellow>")
 
