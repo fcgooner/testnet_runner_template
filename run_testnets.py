@@ -48,10 +48,10 @@ async def run_testnets(ads_profile: Profile):
 
             for testnet in testnets_list:
                 try:
-                    if testnet == 'ATLETA':
+                    if testnet == 'TESTNET 1':
                         await run_testnet1(page=page, ads_profile=ads_profile, testnet=testnet)
 
-                    elif testnet == 'PLUME':
+                    elif testnet == 'TESTNET 2':
                         await run_testnet2(page=page, ads_profile=ads_profile, testnet=testnet)
 
                 except Exception as e:
