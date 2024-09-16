@@ -11,7 +11,7 @@ from config import ANTIC_PORT
 
 async def browser_launcher(ads_profile: Profile, start: bool = False) -> str | bool | None:
     profile_id = ads_profile.profile_id
-    profile_string = f"ПРОФІЛЬ {ads_profile.profile_number} ({ads_profile.profile_id})"
+    profile_string = f"PROFILE {ads_profile.profile_number} ({ads_profile.profile_id})"
 
     if start:
         url = f"http://local.adspower.net:{ANTIC_PORT}/api/v1/browser/start?user_id={profile_id}&open_tabs=1&ip_tab=0"
@@ -39,15 +39,15 @@ async def browser_launcher(ads_profile: Profile, start: bool = False) -> str | b
                                     return True
 
                         except json.JSONDecodeError as e:
-                            logger.error(f"{profile_string} | НЕ ВДАЛОСЯ ДЕКОДУВАТИ JSON З ВІДПОВІДІ: {e}")
+                            logger.error(f"{profile_string} | UNABLE TO DECODE JSON FROM RESPONSE: {e}")
                     else:
-                        logger.error(f"{profile_string} | НЕ ВДАЛОСЯ ОТРИМАТИ ДАНІ. СТАТУС-КОД: {response.status}")
+                        logger.error(f"{profile_string} | UNABLE TO RETRIEVE DATA. STATUS CODE: {response.status}")
 
             await asyncio.sleep(3)
 
     except (ClientConnectionError, ClientPayloadError, TimeoutError) as e:
-        logger.error(f"{profile_string} | ВИНИКЛА ПОМИЛКА: {e}")
+        logger.error(f"{profile_string} | LAUNCH ERROR: {e}")
     except Exception as e:
-        logger.error(f"{profile_string} | ВИНИКЛА НЕВІДОМА ПОМИЛКА: {e}")
+        logger.error(f"{profile_string} | UNKNOWN LAUNCH ERROR: {e}")
 
     return None

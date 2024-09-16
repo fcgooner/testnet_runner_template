@@ -13,7 +13,7 @@ class Profile:
         self.task_results = {}
 
     def __str__(self) -> str:
-        return f"{BLUE}Профіль {self.profile_number} ({self.profile_id}):{RESET}\n{self.task_results}\n"
+        return f"{BLUE}Profile {self.profile_number} ({self.profile_id}):{RESET}\n{self.task_results}\n"
 
     def set_task_result(self, key, value):
         self.task_results[key] = value
@@ -22,18 +22,16 @@ class Profile:
         return self.task_results.get(task, None)
 
     def print_task_results(self):
-        logger.log("PRINTOUT_BLUE", f"\nПРОФІЛЬ {self.profile_number} ({self.profile_id})")
+        logger.log("PRINTOUT_BLUE", f"\nPROFILE {self.profile_number} ({self.profile_id})")
 
-        # ЗНАХОДЖЕННЯ МАКСИМАЛЬНОЇ ДОВЖИНИ НАЗВ ЗАВДАНЬ ДЛЯ ФОРМАТУВАННЯ
+        # FINDING MAX LENGTH OF TASK NAMES FOR FORMATTING
         max_task_name_length = max(len(task) for task in self.task_results)
 
         for task_name, result in self.task_results.items():
             if task_name in ALL_TASKS:
-                result_str = "УСПІШНО" if result else "НЕВДАЛО"
+                result_str = "SUCCESS" if result else "FAILED"
 
                 if result:
                     logger.log("PRINTOUT_GREEN", f"    {task_name.ljust(max_task_name_length)}: {result_str}")
                 else:
                     logger.log("PRINTOUT_RED", f"    {task_name.ljust(max_task_name_length)}: {result_str}")
-
-

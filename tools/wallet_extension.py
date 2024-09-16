@@ -21,7 +21,7 @@ async def wallet_operations(page: Page, operation: str, password: str = "") -> b
                         await tab.locator("[type=submit]").click()
                         return True
                     except TimeoutError as e:
-                        logger.error(f"Помилка під час розблокування гаманця: {e}")
+                        logger.error(f"ERROR DURING WALLET UNLOCK: {e}")
                         return False
 
                 elif operation == "sign":
@@ -30,7 +30,7 @@ async def wallet_operations(page: Page, operation: str, password: str = "") -> b
                         await tab.locator("text=Confirm").click()
                         return True
                     except TimeoutError as e:
-                        print(f"Помилка під час підписання транзакції: {e}")
+                        print(f"ERROR DURING TRANSACTION SIGN: {e}")
                         return False
 
                 elif operation == "connect":
@@ -41,7 +41,8 @@ async def wallet_operations(page: Page, operation: str, password: str = "") -> b
                         await asyncio.sleep(3)
                         await tab.get_by_role(role="button", name="Connect").click()
                         return True
-                    except TimeoutError:
+                    except TimeoutError as e:
+                        print(f"ERROR DURING WALLET CONNECTION: {e}")
                         return False
 
     return False

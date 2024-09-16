@@ -14,12 +14,12 @@ from .tasks.testnet1_task2 import testnet1_task2
 
 
 async def run_testnet1(page: Page, ads_profile: Profile, testnet: str):
-    profile_string = f"ПРОФІЛЬ {ads_profile.profile_number} ({ads_profile.profile_id})"
+    profile_string = f"PROFILE {ads_profile.profile_number} ({ads_profile.profile_id})"
     tasks = get_tasks(testnet)
-    logger.debug(f"{profile_string} | СПИСОК ЗАВДАНЬ: {tasks}")
+    logger.debug(f"{profile_string} | TASK LIST: {tasks}")
 
     for task in tasks:
-        logger.info(f"{profile_string} | {task} | ПОЧАТОК ВИКОНАННЯ")
+        logger.info(f"{profile_string} | {task} | EXECUTION START")
         task_result = None
 
         try:
@@ -32,7 +32,7 @@ async def run_testnet1(page: Page, ads_profile: Profile, testnet: str):
                     task_result = await testnet1_task2(ads_profile, page)
 
             else:
-                logger.error(f"{profile_string} | НЕВІДОМЕ ЗАВДАННЯ: {task}")
+                logger.error(f"{profile_string} | UNKNOWN TASK: {task}")
 
             if task_result is not None:
                 update_task_results(profile=ads_profile, task=task, task_result=task_result, called_testnet=testnet)
@@ -40,13 +40,13 @@ async def run_testnet1(page: Page, ads_profile: Profile, testnet: str):
             await asyncio.sleep(randint(1, 2))
 
         except Error as e:
-            logger.error(f"{profile_string} | {task} | НЕВІДОМА ПОМИЛКА: {e}")
+            logger.error(f"{profile_string} | {task} | UNKNOWN ERROR: {e}")
 
-        logger.info(f"{profile_string} | {task} | РЕЗУЛЬТАТ: {task_result}")
-        logger.info(f"{profile_string} | {task} | КІНЕЦЬ ВИКОНАННЯ")
+        logger.info(f"{profile_string} | {task} | RESULT: {task_result}")
+        logger.info(f"{profile_string} | {task} | EXECUTION END")
 
         if task in CRITICAL_TASKS and task_result is False:
             logger.error(f"{profile_string} | {task}={task_result} | CRITICAL_TASKS={CRITICAL_TASKS}")
             break
 
-    logger.info(f"{profile_string} | КІНЕЦЬ ВИКОНАННЯ УСІХ ЗАВДАНЬ")
+    logger.info(f"{profile_string} | ALL TASKS EXECUTED")

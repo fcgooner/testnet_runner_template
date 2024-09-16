@@ -6,7 +6,7 @@ from config import PROFILES_TO_RUN, PROFILE_DATABASE_PATH, TESTNET_TASKS_DATAFIL
 
 
 def get_profiles_to_run(cycle: int, profiles: list[Profile]) -> list[Profile]:
-    # ОТРИМАННЯ ПАЧКИ ПРОФІЛІВ ДЛЯ ПРОГОНУ
+    # GETTING PROFILES BATCH TO RUN
 
     profiles_to_run = []
 
@@ -25,16 +25,16 @@ def get_profiles_to_run(cycle: int, profiles: list[Profile]) -> list[Profile]:
 
 def initialize_profiles() -> (list[Profile], list[Profile]):
     """
-    Функція для ініціалізації профілів (створення об'єктів класу Profile і заповнення завдань) з CSV таблиць
+    Function to initialize profiles from CSV-tables (profile table and task tables)
 
-    :return: оригінальний список профілів, перемішаний список профілів
+    :return: original list of profiles (in order as in CSV), shuffled list of profiles
     """
 
     ads_profiles = create_profiles_from_csv(PROFILE_DATABASE_PATH)
     shuffled_profiles = ads_profiles.copy()
     shuffle(shuffled_profiles)
 
-    # ЗАПОВНЕННЯ ПРОФІЛІВ ДАНИМИ З ТАБЛИЦЬ ЗАВДАНЬ
+    # FILLING PROFILES WITH DATA FROM TASK CSV-TABLES
     for ads_profile in shuffled_profiles:
         for testnet in TESTNET_TASKS_DATAFILES:
             csv_file = TESTNET_TASKS_DATAFILES[testnet]
@@ -44,7 +44,7 @@ def initialize_profiles() -> (list[Profile], list[Profile]):
 
 
 def create_profiles_from_csv(csv_file_path) -> list[Profile]:
-    # СТВОРЕННЯ СПИСКУ ОБ'ЄКТІВ КЛАСУ Profile З CSV ТАБЛИЦІ
+    # CREATING Profile class INSTANCES FROM CSV-TABLE
 
     profiles = []
 
@@ -71,7 +71,7 @@ def update_profile_from_csv(profile, csv_file_path, testnet):
             if row['PROFILE_ID'] == profile.profile_id:
                 for key, value in row.items():
                     if key == 'PROFILE_ID':
-                        continue  # ПРОПУСК КОЛОНКИ PROFILE_ID
+                        continue  # SKIP PROFILE_ID COLUMN
 
                     if value == 'False':
                         value = False

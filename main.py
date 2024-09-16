@@ -16,25 +16,25 @@ from tools.task_handler import update_task_csv
 async def main():
 
     if CONTINUE_RUN:
-        logger.critical(f"ЦЕ НЕ НУЛЬОВИЙ ЗАПУСК: CONTINUE_RUN is {CONTINUE_RUN}")
+        logger.critical(f"NOT A FRESH RUN: CONTINUE_RUN is {CONTINUE_RUN}")
 
-    # ОБНУЛЯЄМО РЕЗУЛЬТАТИ ЗАВДАНЬ ПЕРЕД ЗАПУСКОМ ПРОФІЛІВ
+    # RESET TASK RESULTS BEFORE RUNNING PROFILES
     else:
         for testnet in TESTNET_TASKS_DATAFILES:
             filepath = TESTNET_TASKS_DATAFILES[testnet]
             update_task_csv(csv_file_path=filepath)
-        logger.info("CSV-таблиці завдань скинуто")
+        logger.info("CSV-TABLES FOR TASKS RESETED")
 
-    # ОТРИМУЄМО СПИСОК ПРОФІЛІВ
+    # GET LIST OF PROFILES
     original_profile_list, shuffled_profile_list = initialize_profiles()
 
     for cycle in range(1, MAX_TASK_ATTEMPTS + 1):
         if cycle > 1:
-            logger.info("Спимо між прогоном нової пачки профілів")
+            logger.info("SLEEP BETWEEN RUNS OF NEW BATCH OF PROFILES")
             await asyncio.sleep(randint(30, 60))
 
         all_profiles = shuffled_profile_list.copy()
-        logger.debug(f"ЦИКЛ {cycle}/{MAX_TASK_ATTEMPTS}")
+        logger.debug(f"CYCLE {cycle}/{MAX_TASK_ATTEMPTS}")
 
         while True:
             try:
@@ -42,23 +42,23 @@ async def main():
                 async_tasks = [asyncio.create_task(run_testnets(ads_profile)) for ads_profile in profiles_to_run]
 
                 if not async_tasks:
-                    logger.debug(f"УСІ ПРОФІЛІ ВІДПРАЦЬОВАНО")
+                    logger.debug(f"ALL PROFILES DONE")
                     break
 
-                # ЗАПУСК ВИБРАНИХ ПРОФІЛІВ
-                logger.debug("ЗАПУСК ПАЧКИ ПРОФІЛІВ")
+                # RUN SELECTED PROFILES
+                logger.debug("RUNNNING PROFILES BATCH")
                 await asyncio.wait(async_tasks)
 
-                # ОНОВЛЮЄМО СПИСОК НЕВІДПРАЦЬОВАНИХ ПРОФІЛІВ
+                # UPDATE LIST OF NOT USED PROFILES
                 all_profiles = [item for item in all_profiles if item not in profiles_to_run]
                 if not all_profiles:
                     break
 
                 sleep(randint(30, 60))
             except Exception as e:
-                logger.critical(f"НЕВІДОМА ПОМИЛКА: {e}")
+                logger.critical(f"UNKNOWN ERROR: {e}")
 
-    # ВИВЕСТИ РЕЗУЛЬТАТИ ЗАВДАНЬ ДЛЯ КОЖНОГО ПРОФІЛЯ В КОНСОЛЬ
+    # PRINT TASK RESULTS FOR EVERY PROFILE INTO CONSOLE
     task_summary = {}
     for profile in original_profile_list:
         profile.print_task_results()
@@ -67,15 +67,15 @@ async def main():
             if task in ALL_TASKS:
                 task_summary[task] = task_summary.get(task, 0) + (1 if result is True else 0)
 
-    # ВИВЕДЕННЯ ЗВЕДЕНИХ РЕЗУЛЬТАТІВ ЗАВДАНЬ ПО ВСІХ ПРОФІЛЯХ В КОНСОЛЬ
+    # PRINT TASKS RESULTS SUMMARY INTO CONSOLE
     max_task_name_length = max(len(task) for task in task_summary)
 
-    logger.log("PRINTOUT_BLUE", f'\nЗВЕДЕНІ РЕЗУЛЬТАТИ:')
+    logger.log("PRINTOUT_BLUE", f'\nSUMMARY:')
     for task in task_summary:
         logger.log("PRINTOUT_YELLOW", f"  {task.ljust(max_task_name_length)}: {task_summary[task]}/{len(original_profile_list)}")
 
     if CONTINUE_RUN:
-        logger.critical(f"ЦЕ НЕ НУЛЬОВИЙ ЗАПУСК: CONTINUE_RUN is {CONTINUE_RUN}")
+        logger.critical(f"NOT A FRESH RUN: CONTINUE_RUN is {CONTINUE_RUN}")
 
 
 def logger_format(record):
@@ -93,7 +93,7 @@ def logger_format(record):
 
 
 if __name__ == "__main__":
-    # ІНІЦІАЛІЗАЦІЯ ЛОҐҐЕРА
+    # LOGGER INITIALIZATION
     logger.remove()
     logger.level("DEBUG", color=DARK_GRAY)
     logger.level("PRINTOUT_BLUE", no=25, color="<blue>")
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     logger.level("PRINTOUT_RED", no=25, color="<red>")
     logger.level("PRINTOUT_YELLOW", no=25, color="<yellow>")
 
-    # ЛОҐҐЕР ДЛЯ КОНСОЛІ
+    # LOGGER FOR CONSOLE
     logger.add(
         sink=sys.stdout,
         format="<level>{message}</level>",
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         colorize=True
     )
 
-    # ЛОҐҐЕР ДЛЯ ФАЙЛА
+    # LOGGER FOR FILE
     current_time = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
     logger.add(
         sink=f'logs/{current_time}.log',

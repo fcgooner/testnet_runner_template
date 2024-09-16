@@ -8,7 +8,7 @@ from config import TESTNET_TASKS_DATAFILES, TESTNET_TASKS
 
 
 def update_task_results(profile: Profile, task: str, task_result: bool, called_testnet: str) -> None:
-    # ОНОВЛЕННЯ РЕЗУЛЬТАТІВ ЗАВДАННЯ
+    # UPDATING TASK RESULT
     profile.set_task_result(task.upper(), task_result)
 
     for testnet in TESTNET_TASKS_DATAFILES:
@@ -23,7 +23,7 @@ def update_task_results(profile: Profile, task: str, task_result: bool, called_t
                 new_value=str(task_result)
             )
             logger.debug(
-                f"ПРОФІЛЬ {profile.profile_number} ({profile.profile_id}) | {task} | РЕЗУЛЬТАТ ({task_result}) ЗАПИСАНО В ТАБЛИЦЮ")
+                f"PROFILE {profile.profile_number} ({profile.profile_id}) | {task} | RESULT ({task_result}) UPDATED IN CSV-TABLE")
             return
 
 
@@ -34,23 +34,23 @@ def update_task_csv(csv_file_path, profile_id=None, column_name=None, new_value=
         csvreader = csv.DictReader(csvfile)
 
         for row in csvreader:
-            updated_row = {'PROFILE_ID': row['PROFILE_ID']}  # PROFILE_ID ЗАЛИШАЄМО НЕЗМІННИМ
+            updated_row = {'PROFILE_ID': row['PROFILE_ID']}  # LEAVE PROFILE_ID UNCHANGED
             for key in row.keys():
                 if key == 'PROFILE_ID':
                     continue
-                # ОНОВЛЮЄМО ЛИШЕ КОНКРЕТНЕ ЗАВДАННЯ
+                # UPDATE ONLY SPECIFIC VALUE
                 if profile_id and column_name and new_value is not None:
                     if row['PROFILE_ID'] == profile_id and key == column_name:
-                        updated_row[key] = new_value # ЗАПИСУЄМО НОВЕ ЗНАЧЕННЯ
+                        updated_row[key] = new_value # WRITE NEW VALUE
                     else:
-                        updated_row[key] = row[key]  # ЗАЛИШАЄМО СТАРЕ ЗНАЧЕННЯ
-                # ОЧИЩЕННЯ ВСІЄЇ ТАБЛИЦІ
+                        updated_row[key] = row[key]  # LEAVE OLD VALUE
+                # COMPLETE TABLE RESET
                 else:
                     updated_row[key] = 'False'
 
             updated_rows.append(updated_row)
 
-    # ЗАПИСУЄМО ОНОВЛЕНІ РЯДКИ
+    # WRITE UPDATED ROWS
     with open(csv_file_path, mode='w', newline='') as csvfile:
         fieldnames = updated_rows[0].keys()
         csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -64,22 +64,22 @@ def get_tasks(testnet: str) -> list[str]:
     testnet_optional_tasks = []
     testnet_group_tasks = []
 
-    # ОТРИМУЄМО СПИСОК CORE ЗАВДАНЬ
+    # GET LIST OF CORE TASKS
     for task in TESTNET_TASKS[testnet.upper()]['CORE']:
         testnet_core_tasks.append(task)
 
-    # ОТРИМУЄМО СПИСОК OPTIONAL ЗАВДАНЬ
+    # GET LIST OF OPTIONAL TASKS
     for task in TESTNET_TASKS[testnet.upper()]['OPTIONAL']:
         testnet_optional_tasks.append(task)
 
-    # ОТРИМУЄМО СПИСОК GROUP ЗАВДАНЬ
+    # GET LIST OF GROUP TASKS
     for task in TESTNET_TASKS[testnet.upper()]['GROUP']:
         testnet_group_tasks.append(task)
 
-    # ПЕРЕМІШУЄМО OPTIONAL ЗАВДАННЯ
+    # SHUFFLE OPTIONAL TASKS
     shuffle(testnet_optional_tasks)
 
-    # ВСТАВЛЯЄМО GROUP ЗАВДАННЯ В РАНДОМНЕ МІСЦЕ СЕРЕД OPTIONAL ЗАВДАНЬ
+    # INSERT GROUP TASKS AT RANDOM INDEX INSIDE OPTIONAL TASKS LIST
     random_index = randint(0, len(testnet_optional_tasks))
 
     testnet_optional_tasks = (
@@ -88,7 +88,7 @@ def get_tasks(testnet: str) -> list[str]:
             testnet_optional_tasks[random_index:]
     )
 
-    # ФОРМУЄМО ФІНАЛЬНИЙ СПИСОК ЗАВДАНЬ
+    # GETTING FINAL LIST OF TASKS
     tasks = testnet_core_tasks + testnet_optional_tasks
 
     return tasks

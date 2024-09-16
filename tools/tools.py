@@ -5,7 +5,7 @@ from playwright.async_api import Page, TimeoutError
 from data.variables import rabby_extension_url
 
 
-# Перевірка чи не застрягло вікно гаманця
+# CHECK IF THERE IS STUCKED WALLET WINDOW
 async def check_stuck_wallet_window(page: Page):
     await asyncio.sleep(2)
     all_pages = page.context.pages
