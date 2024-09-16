@@ -15,7 +15,7 @@ Stores data about profiles. Need to be filled manually.
 You can add as many new colums as you like, just don't forget to update `create_profiles_from_csv()` function in **tools/profile_handler.py** and `__init__` method in Profile class (**classes/ads_profile.py**)
 
 ## testnets/[testnet_name]/testnet_data/[testnet_name]_tasks_data.csv
-Stores data with profile task results.
+Stores data with profile task results. Need to be filled manually.
 
 Task results reset to `False` every script run, unless `CONTINUE_RUN` set to `True` in **config.py**
 
