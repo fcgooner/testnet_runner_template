@@ -6,19 +6,22 @@ from config import PROFILES_TO_RUN, PROFILE_DATABASE_PATH, TESTNET_TASKS_DATAFIL
 
 
 def get_profiles_to_run(cycle: int, profiles: list[Profile]) -> list[Profile]:
-    # GETTING PROFILES BATCH TO RUN
-
+    # GETTING PROFILE BATCH TO RUN
     profiles_to_run = []
 
-    if cycle == 1:
+    # RUN FROM SCRATCH
+    if cycle == 1 and CONTINUE_RUN is False:
         for profile in profiles[:PROFILES_TO_RUN]:
             profiles_to_run.append(profile)
+    
+    # CONTINUE PREVIOUS RUN 
     else:
-        for profile in profiles[:PROFILES_TO_RUN]:
-            for key in profile.task_results:
-                if not profile.task_results[key]:
-                    profiles_to_run.append(profile)
-                    break
+        for profile in profiles:
+            if len(profiles_to_run) < PROFILES_TO_RUN:
+                for key in profile.task_results:
+                    if profile.task_results[key] is False:
+                        profiles_to_run.append(profile)
+                        break
 
     return profiles_to_run
 
@@ -44,7 +47,7 @@ def initialize_profiles() -> (list[Profile], list[Profile]):
 
 
 def create_profiles_from_csv(csv_file_path) -> list[Profile]:
-    # CREATING Profile class INSTANCES FROM CSV-TABLE
+    # CREATING Profile class INSTANCES FROM CSV TABLE
 
     profiles = []
 
@@ -64,6 +67,8 @@ def create_profiles_from_csv(csv_file_path) -> list[Profile]:
 
 
 def update_profile_from_csv(profile, csv_file_path, testnet):
+    all_tasks = get_all_tasks()
+    
     with open(csv_file_path, newline='') as csvfile:
         csvreader = csv.DictReader(csvfile)
 
@@ -73,11 +78,13 @@ def update_profile_from_csv(profile, csv_file_path, testnet):
                     if key == 'PROFILE_ID':
                         continue  # SKIP PROFILE_ID COLUMN
 
-                    if value == 'False':
-                        value = False
-                    else:
-                        value = True
+                    # SKIP TASKS THAT ARE NOT IN CONFIG FILE
+                    if f"{testnet} {key}" in all_tasks:
+                        if value == 'False':
+                            value = False
+                        else:
+                            value = True
 
-                    dict_key = f"{testnet.upper()} {key.upper()}"
-                    profile.set_task_result(dict_key, value)
+                        dict_key = f"{testnet} {key}"
+                        profile.set_task_result(dict_key, value)
                 break
