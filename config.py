@@ -1,5 +1,5 @@
 # ANTIDETECT BROWSER SETTINGS
-ANTIC_PORT = "50325"            # API -> API Settings -> Connection (http://local.adspower.net:ПОРТ)
+ANTIC_PORT = "50325"            # API -> API Settings -> Connection (http://local.adspower.net:PORT)
 
 # COMMON SETTINGS
 CONTINUE_RUN = False            # if True - don't reset task results from previous runs.
