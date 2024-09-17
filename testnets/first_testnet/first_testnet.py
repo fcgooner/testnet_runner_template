@@ -37,16 +37,20 @@ async def run_testnet1(page: Page, ads_profile: Profile, testnet: str):
             if task_result is not None:
                 update_task_results(profile=ads_profile, task=task, task_result=task_result, called_testnet=testnet)
 
+            if task_result is None:
+                logger.info(f"{profile_string} | {task} | TASK NON-EXISTENT OR WAS ALREADY EXECUTED IN A PREVIOUS RUN")
+            else:
+                logger.info(f"{profile_string} | {task} | RESULT: {task_result}")
+
             await asyncio.sleep(randint(1, 2))
 
         except Error as e:
             logger.error(f"{profile_string} | {task} | UNKNOWN ERROR: {e}")
 
-        logger.info(f"{profile_string} | {task} | RESULT: {task_result}")
         logger.info(f"{profile_string} | {task} | EXECUTION END")
 
         if task in CRITICAL_TASKS and task_result is False:
-            logger.error(f"{profile_string} | {task}={task_result} | CRITICAL_TASKS={CRITICAL_TASKS}")
+            logger.error(f"{profile_string} | {task} | CRITICAL TASK FAILED. EXITING PROFILE")
             break
 
     logger.info(f"{profile_string} | ALL TASKS EXECUTED")
