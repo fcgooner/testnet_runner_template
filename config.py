@@ -1,5 +1,5 @@
 # ANTIDETECT BROWSER SETTINGS
-ANTIC_PORT = "50325"            # API -> API Settings -> Connection (http://local.adspower.net:ПОРТ)
+ANTIC_PORT = "50325"            # API -> API Settings -> Connection (http://local.adspower.net:PORT)
 
 # COMMON SETTINGS
 CONTINUE_RUN = False            # if True - don't reset task results from previous runs.
@@ -21,8 +21,8 @@ WALLET_NAMES = [        # List of wallets to unlock before executing tasks
 # TESTNET SETTINGS
 
 TESTNET_TASKS_DATAFILES = {             # Path to testnet tasks CSV-table
-    "TESTNET 1": "testnets/first_testnet/testnet_data/testnet1_tasks_data.csv",
-    "TESTNET 2": "testnets/second_testnet/testnet_data/testnet2_tasks_data.csv",
+    "TESTNET1": "testnets/first_testnet/testnet_data/testnet1_tasks_data.csv",
+    "TESTNET2": "testnets/second_testnet/testnet_data/testnet2_tasks_data.csv",
 }
 
 CRITICAL_TASKS = ["TESTNET1 TASK1"]     # List of tasks, without the successful completion of which there is no point
@@ -33,7 +33,7 @@ CRITICAL_TASKS = ["TESTNET1 TASK1"]     # List of tasks, without the successful 
 TESTNET_TASKS = {
 
     # TESTNET 1
-    "TESTNET 1": {
+    "TESTNET1": {
         'CORE': [               # Tasks, that are executed first, execution order not shuffled
             "TESTNET1 TASK1",
         ],
@@ -48,7 +48,7 @@ TESTNET_TASKS = {
     },
 
     # TESTNET 2
-    "TESTNET 2": {
+    "TESTNET2": {
         'CORE': [
                 "TESTNET2 TASK1",
                 "TESTNET2 TASK2"
