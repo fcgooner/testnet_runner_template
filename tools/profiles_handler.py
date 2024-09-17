@@ -3,6 +3,7 @@ from random import shuffle
 
 from classes.ads_profile import Profile
 from config import PROFILES_TO_RUN, PROFILE_DATABASE_PATH, TESTNET_TASKS_DATAFILES
+from tools.tools import get_all_tasks
 
 
 def get_profiles_to_run(cycle: int, profiles: list[Profile]) -> list[Profile]:
