@@ -57,13 +57,11 @@ async def run_testnets(ads_profile: Profile):
                 except Exception as e:
                     logger.error(f"{profile_str} | ERROR DURING {testnet} EXECUTION: {e}")
 
-            # sleep(100000)
-
-            browser_closed = await browser_launcher(ads_profile)
-            if isinstance(browser_closed, bool) and browser_closed:
-                logger.debug(f"{profile_str} | BROWSER CLOSED")
-            else:
-                logger.error(f"{profile_str} | UNABLE TO CLOSE BROWSER")
+        browser_closed = await browser_launcher(ads_profile)
+        if isinstance(browser_closed, bool) and browser_closed:
+            logger.debug(f"{profile_str} | BROWSER CLOSED")
+        else:
+            logger.error(f"{profile_str} | UNABLE TO CLOSE BROWSER")
 
     else:
         logger.error(f"{profile_str} | UNABLE TO LAUNCH BROWSER")
