@@ -6,7 +6,7 @@ from asyncio import TimeoutError
 from loguru import logger
 
 from classes.ads_profile import Profile
-from config import ANTIC_PORT
+from config import ADS_PORT
 
 
 async def browser_launcher(ads_profile: Profile, start: bool = False) -> str | bool | None:
@@ -14,21 +14,20 @@ async def browser_launcher(ads_profile: Profile, start: bool = False) -> str | b
     profile_string = f"PROFILE {ads_profile.profile_number} ({ads_profile.profile_id})"
 
     if start:
-        url = f"http://local.adspower.net:{ANTIC_PORT}/api/v1/browser/start?user_id={profile_id}&open_tabs=1&ip_tab=0"
+        url = f"http://local.adspower.net:{ADS_PORT}/api/v1/browser/start?user_id={profile_id}&open_tabs=1&ip_tab=0"
+        total_attempts = 50
     else:
-        url = f"http://local.adspower.net:{ANTIC_PORT}/api/v1/browser/stop?user_id={profile_id}"
-
+        url = f"http://local.adspower.net:{ADS_PORT}/api/v1/browser/stop?user_id={profile_id}"
+        total_attempts = 25
     try:
-        for attempt in range(5):
-            logger.debug(f"{profile_string} | {attempt + 1} СПРОБА ЗАПУСКУ")
-
-            connector = TCPConnector(limit=200)
-            async with ClientSession(connector=connector) as session:
+        connector = TCPConnector(limit=200)
+        async with ClientSession(connector=connector) as session:
+            for attempt in range(total_attempts):
                 async with session.get(url) as response:
                     if response.status == 200:
                         try:
                             response_data = await response.json()
-                            print(response_data)
+                            logger.debug(f"{profile_string} | response data: {response_data}")
 
                             if start:
                                 if response_data.get('code') == 0 and response_data.get('data', {}).get('ws', {}).get('puppeteer'):
@@ -43,7 +42,7 @@ async def browser_launcher(ads_profile: Profile, start: bool = False) -> str | b
                     else:
                         logger.error(f"{profile_string} | UNABLE TO RETRIEVE DATA. STATUS CODE: {response.status}")
 
-            await asyncio.sleep(3)
+                await asyncio.sleep(5)
 
     except (ClientConnectionError, ClientPayloadError, TimeoutError) as e:
         logger.error(f"{profile_string} | LAUNCH ERROR: {e}")

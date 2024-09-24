@@ -47,7 +47,7 @@ async def main():
 
                 # RUN SELECTED PROFILES
                 logger.debug("RUNNNING PROFILES BATCH")
-                await asyncio.wait(async_tasks)
+                await asyncio.gather(*async_tasks)
 
                 # UPDATE LIST OF NOT USED PROFILES
                 all_profiles = [item for item in all_profiles if item not in profiles_to_run]
